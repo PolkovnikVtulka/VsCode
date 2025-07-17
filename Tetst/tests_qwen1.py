@@ -4,26 +4,28 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 def test_qwen1():
+    # Создаем экземпляр WebDriver
     driver = webdriver.Chrome()
 
     try:
         # Открываем сайт
         driver.get("https://www.wikipedia.org/ ")
 
-        # Создаем объект WebDriverWait
+        # Явное ожидание появления кнопки "English"
         wait = WebDriverWait(driver, 10)
-
-        # Ждем, пока кнопка "English" станет кликабельной
         english_button = wait.until(EC.element_to_be_clickable((By.ID, "js-link-box-en")))
 
         # Кликаем по кнопке
         english_button.click()
 
-        # Ждем, пока заголовок страницы будет содержать "Wikipedia"
+        # Явное ожидание загрузки новой страницы
         wait.until(EC.title_contains("Wikipedia"))
 
         # Проверяем заголовок страницы
-        assert driver.title == "Wikipedia", f"Ошибка: ожидалось 'Wikipedia', получено '{driver.title}'"
+        expected_title = "Wikipedia, the free encyclopedia"
+        actual_title = driver.title
+
+        assert actual_title == expected_title, f"Ошибка: ожидалось '{expected_title}', получено '{actual_title}'"
         print("Тест пройден!")
 
     finally:
